@@ -13,58 +13,34 @@ public class ReadTimer {
 
     /**
      * 类注释翻译
-     * Timer以后台线程的形式为
-     * A facility for threads to schedule tasks for future execution in a
-     * background thread.  Tasks may be scheduled for one-time execution, or for
-     * repeated execution at regular intervals.
+     * Timer是以后台线程的形式为，方便线程按计划执行一些未来任务的工具；任务可以一次性执行，也可以按照一定间隔定期执行；
      *
-     * <p>Corresponding to each {@code Timer} object is a single background
-     * thread that is used to execute all of the timer's tasks, sequentially.
-     * Timer tasks should complete quickly.  If a timer task takes excessive time
-     * to complete, it "hogs" the timer's task execution thread.  This can, in
-     * turn, delay the execution of subsequent tasks, which may "bunch up" and
-     * execute in rapid succession when (and if) the offending task finally
-     * completes.
+     * 每个Timer对象都对应唯一一个后台线程，这个后台线程用于顺序执行这个Timer对象所有任务。（如何保证顺序执行的）
+     * Timer的任务应该是快速完成的任务，如果一个任务执行时间过长，它会占用Timer的任务执行线程，这反过来会延迟后续任务的执行，
+     * 当这个缓慢的任务最终执行完毕，有可能造成后续任务连续快速的执行完毕，造成捆绑执行的问题（问题：与定时任务间隔执行的初衷不符）
      *
-     * <p>After the last live reference to a {@code Timer} object goes away
-     * <i>and</i> all outstanding tasks have completed execution, the timer's task
-     * execution thread terminates gracefully (and becomes subject to garbage
-     * collection).  However, this can take arbitrarily long to occur.  By
-     * default, the task execution thread does not run as a <i>daemon thread</i>,
-     * so it is capable of keeping an application from terminating.  If a caller
-     * wants to terminate a timer's task execution thread rapidly, the caller
-     * should invoke the timer's {@code cancel} method.
+     * 当没有对Timer对象的引用和所有任务都执行完毕后，Timer对象对应的任务执行线程会被优雅停止，并最终由GC回收，但是回收的周期是不确定的，
+     * 可能是任意时间。默认条件下，这个任务执行线程不作为守护线程执行，这可以防止应用程序终止。如果调用者希望快速终止执行线程，可以显式
+     * 调用Timer的cancel方法；
      *
-     * <p>If the timer's task execution thread terminates unexpectedly, for
-     * example, because its {@code stop} method is invoked, any further
-     * attempt to schedule a task on the timer will result in an
-     * {@code IllegalStateException}, as if the timer's {@code cancel}
-     * method had been invoked.
+     * 如果计时器的任务执行线程意外终止(例如，因为它的{@code Stop}方法被调用)，则任何在计时器上调度任务的进一步尝试都将
+     * 导致{@code IllegalStateException}，这和调用了计时器的{@code Cancel}方法效果一样。
      *
-     * <p>This class is thread-safe: multiple threads can share a single
-     * {@code Timer} object without the need for external synchronization.
+     * 这个类是线程安全的，多线程可以共用一个Timer对象而不必所额外的同步措施
      *
-     * <p>This class does <i>not</i> offer real-time guarantees: it schedules
-     * tasks using the {@code Object.wait(long)} method.
+     * 此类不提供实时性保证：它使用{@code Object.Wait(Long)}方法调度任务。（描述：通过延迟执行作为周期判断，不以系统时间作为判断）
      *
-     * <p>Java 5.0 introduced the {@code java.util.concurrent} package and
-     * one of the concurrency utilities therein is the {@link
-     * java.util.concurrent.ScheduledThreadPoolExecutor
-     * ScheduledThreadPoolExecutor} which is a thread pool for repeatedly
-     * executing tasks at a given rate or delay.  It is effectively a more
-     * versatile replacement for the {@code Timer}/{@code TimerTask}
-     * combination, as it allows multiple service threads, accepts various
-     * time units, and doesn't require subclassing {@code TimerTask} (just
-     * implement {@code Runnable}).  Configuring {@code
-     * ScheduledThreadPoolExecutor} with one thread makes it equivalent to
-     * {@code Timer}.
+     * Java5.0引入了{@code java.util.current}包，其中的一个并发实用程序是
+     * {@link java.util.concurrent.ScheduledThreadPoolExecutor ScheduledThreadPoolExecutor}，它是一个线程池，用于以给定的
+     * 速率或延迟重复执行任务。它有效地替代了{@code Timer}/{@code TimerTask}组合，因为它允许多个服务线程，接受各种时间单位，并且不需要
+     * 子类化{@code TimerTask}(只需实现{@code Runnable})。
      *
-     * <p>Implementation note: This class scales to large numbers of concurrently
-     * scheduled tasks (thousands should present no problem).  Internally,
-     * it uses a binary heap to represent its task queue, so the cost to schedule
-     * a task is O(log n), where n is the number of concurrently scheduled tasks.
+     * {@code ScheduledThreadPoolExecutor}指定一个任务执行线程时，效果相当于{@code Timer}。
      *
-     * <p>Implementation note: All constructors start a timer thread.
+     * 实现说明：这个类可以扩展到大量并发调度的任务(数千个任务应该不会出现问题)。
+     * 在内部，它使用二进制堆来表示其任务队列，因此调度一个任务的时间复杂度是O(Logn)，其中n是并发调度的任务数。
+     *
+     * 实现说明：所有构造函数都启动一个计时器线程。
      *
      * @author  Josh Bloch
      * @see     TimerTask
@@ -72,5 +48,9 @@ public class ReadTimer {
      * @since   1.3
      */
 
-    private String classNote;
+    private String 类注释;
+
+    private String[] 参考文章 = new String[]{
+            "https://baijiahao.baidu.com/s?id=1645906817252040900&wfr=spider&for=pc"
+    };
 }
